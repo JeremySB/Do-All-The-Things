@@ -21,7 +21,8 @@ public class TodoItemRepository {
 
     private TodoItemRepository() {
         items = new ArrayList<>();
-        items.add(new TodoItem("Test name", new Date()));
+        for(int i = 0; i < 25; i++)
+            items.add(new TodoItem("Test name", new Date()));
     }
 
     public List<TodoItem> getItems() {

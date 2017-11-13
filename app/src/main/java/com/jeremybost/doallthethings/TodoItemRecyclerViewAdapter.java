@@ -9,6 +9,7 @@ import android.widget.TextView;
 import com.jeremybost.doallthethings.fragments.TodoListFragment.OnListFragmentInteractionListener;
 import com.jeremybost.doallthethings.models.TodoItem;
 
+import java.text.DateFormat;
 import java.util.List;
 
 /**
@@ -20,6 +21,7 @@ public class TodoItemRecyclerViewAdapter extends RecyclerView.Adapter<TodoItemRe
 
     private final List<TodoItem> mValues;
     private final OnListFragmentInteractionListener mListener;
+    private DateFormat dateFormat = DateFormat.getDateTimeInstance(DateFormat.SHORT, DateFormat.SHORT);
 
     public TodoItemRecyclerViewAdapter(List<TodoItem> items, OnListFragmentInteractionListener listener) {
         mValues = items;
@@ -37,7 +39,7 @@ public class TodoItemRecyclerViewAdapter extends RecyclerView.Adapter<TodoItemRe
     public void onBindViewHolder(final ViewHolder holder, int position) {
         holder.mItem = mValues.get(position);
         holder.mIdView.setText(mValues.get(position).getName());
-        holder.mContentView.setText(mValues.get(position).getDueDate().toString());
+        holder.mContentView.setText(dateFormat.format(mValues.get(position).getDueDate()));
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -65,8 +67,8 @@ public class TodoItemRecyclerViewAdapter extends RecyclerView.Adapter<TodoItemRe
         public ViewHolder(View view) {
             super(view);
             mView = view;
-            mIdView = (TextView) view.findViewById(R.id.id);
-            mContentView = (TextView) view.findViewById(R.id.content);
+            mIdView = (TextView) view.findViewById(R.id.name);
+            mContentView = (TextView) view.findViewById(R.id.date);
         }
 
         @Override
