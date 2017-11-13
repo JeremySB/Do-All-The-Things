@@ -13,7 +13,7 @@ import android.widget.TextView;
 import com.jeremybost.doallthethings.fragments.MapItemsFragment;
 import com.jeremybost.doallthethings.fragments.SettingsFragment;
 import com.jeremybost.doallthethings.fragments.TodoListFragment;
-import com.jeremybost.doallthethings.dummy.DummyContent;
+import com.jeremybost.doallthethings.models.TodoItem;
 
 public class MainActivity extends AppCompatActivity implements
         TodoListFragment.OnListFragmentInteractionListener,
@@ -73,7 +73,7 @@ public class MainActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void onListFragmentInteraction(DummyContent.DummyItem item) {
+    public void onListFragmentInteraction(TodoItem item) {
 
     }
 

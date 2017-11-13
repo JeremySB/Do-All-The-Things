@@ -6,8 +6,7 @@
     android:name="com.jeremybost.doallthethings.MainFragments.TodoItemFragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginLeft="16dp"
-    android:layout_marginRight="16dp"
+    android:clickable="false"
     app:layoutManager="LinearLayoutManager"
     tools:context="com.jeremybost.doallthethings.fragments.TodoListFragment"
     tools:listitem="@layout/fragment_todo_list_item" />

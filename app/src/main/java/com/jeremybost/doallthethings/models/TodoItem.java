@@ -25,4 +25,20 @@ public class TodoItem {
 
     public Date getDueDate() { return dueDate; }
     public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
+
+
+    public String toString() {
+        return name + ", " + dueDate.toString();
+    }
+
+    public boolean equals(TodoItem other) {
+        if(!name.equals(other.getName())) {
+            return false;
+        }
+        if(!dueDate.equals(other.getDueDate())) {
+            return false;
+        }
+
+        return true;
+    }
 }

@@ -10,9 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jeremybost.doallthethings.R;
-import com.jeremybost.doallthethings.dummy.DummyContent;
-import com.jeremybost.doallthethings.dummy.DummyContent.DummyItem;
 import com.jeremybost.doallthethings.TodoItemRecyclerViewAdapter;
+import com.jeremybost.doallthethings.TodoItemRepository;
+import com.jeremybost.doallthethings.models.TodoItem;
 
 /**
  * A fragment representing a list of Items.
@@ -31,8 +31,6 @@ public class TodoListFragment extends Fragment {
     public TodoListFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static TodoListFragment newInstance() {
         TodoListFragment fragment = new TodoListFragment();
         Bundle args = new Bundle();
@@ -61,7 +59,7 @@ public class TodoListFragment extends Fragment {
             RecyclerView recyclerView = (RecyclerView) view;
             recyclerView.setLayoutManager(new LinearLayoutManager(context));
             //recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
-            recyclerView.setAdapter(new TodoItemRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new TodoItemRecyclerViewAdapter(TodoItemRepository.getInstance().getItems(), mListener));
         }
         return view;
     }
@@ -95,7 +93,6 @@ public class TodoListFragment extends Fragment {
      * >Communicating with Other Fragments</a> for more information.
      */
     public interface OnListFragmentInteractionListener {
-        // TODO: Update argument type and name
-        void onListFragmentInteraction(DummyItem item);
+        void onListFragmentInteraction(TodoItem item);
     }
 }
