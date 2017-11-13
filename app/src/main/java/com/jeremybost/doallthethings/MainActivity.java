@@ -10,10 +10,10 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.jeremybost.doallthethings.MainFragments.MapItemsFragment;
-import com.jeremybost.doallthethings.MainFragments.SettingsFragment;
-import com.jeremybost.doallthethings.MainFragments.TodoListFragment;
-import com.jeremybost.doallthethings.MainFragments.dummy.DummyContent;
+import com.jeremybost.doallthethings.fragments.MapItemsFragment;
+import com.jeremybost.doallthethings.fragments.SettingsFragment;
+import com.jeremybost.doallthethings.fragments.TodoListFragment;
+import com.jeremybost.doallthethings.dummy.DummyContent;
 
 public class MainActivity extends AppCompatActivity implements
         TodoListFragment.OnListFragmentInteractionListener,

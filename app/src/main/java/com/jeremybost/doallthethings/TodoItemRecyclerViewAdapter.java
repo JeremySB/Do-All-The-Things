@@ -6,8 +6,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.jeremybost.doallthethings.MainFragments.TodoListFragment.OnListFragmentInteractionListener;
-import com.jeremybost.doallthethings.MainFragments.dummy.DummyContent.DummyItem;
+import com.jeremybost.doallthethings.fragments.TodoListFragment.OnListFragmentInteractionListener;
+import com.jeremybost.doallthethings.dummy.DummyContent.DummyItem;
 
 import java.util.List;
 

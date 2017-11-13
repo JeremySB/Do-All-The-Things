@@ -1,4 +1,4 @@
-package com.jeremybost.doallthethings.MainFragments;
+package com.jeremybost.doallthethings.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,8 +10,8 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.jeremybost.doallthethings.R;
-import com.jeremybost.doallthethings.MainFragments.dummy.DummyContent;
-import com.jeremybost.doallthethings.MainFragments.dummy.DummyContent.DummyItem;
+import com.jeremybost.doallthethings.dummy.DummyContent;
+import com.jeremybost.doallthethings.dummy.DummyContent.DummyItem;
 import com.jeremybost.doallthethings.TodoItemRecyclerViewAdapter;
 
 /**

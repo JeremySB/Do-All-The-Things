@@ -1,4 +1,4 @@
-package com.jeremybost.doallthethings.MainFragments.dummy;
+package com.jeremybost.doallthethings.dummy;
 
 import java.util.ArrayList;
 import java.util.HashMap;
