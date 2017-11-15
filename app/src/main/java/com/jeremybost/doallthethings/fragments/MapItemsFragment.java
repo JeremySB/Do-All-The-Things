@@ -118,9 +118,13 @@ public class MapItemsFragment extends Fragment implements OnMapReadyCallback {
 
         for(int i = 0; i<items.size(); i++) {
             // Add a marker for each task and move the camera
-            //LatLng pos = new LatLng(lat, lon);
-            //mMap.addMarker(new MarkerOptions().position(pos).title("Marker at match"));
-            //mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+            if(items.get(i).getLocation() != null) {
+                LatLng pos = new LatLng(items.get(i).getLocation().getLatitude(), items.get(i).getLocation().getLongitude());
+                mMap.addMarker(new MarkerOptions().position(pos).title(items.get(i).getName()));
+                mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+            }
         }
+
+        mMap.animateCamera(CameraUpdateFactory.zoomTo(5.0f));
     }
 }
