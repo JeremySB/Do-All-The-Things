@@ -2,13 +2,14 @@ package com.jeremybost.doallthethings.models;
 
 import android.location.Location;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
  * Created by Jeremy on 11/12/2017.
  */
 
-public class TodoItem {
+public class TodoItem implements Serializable {
     private String name;
     private Date dueDate;
     private Location location;
@@ -16,6 +17,7 @@ public class TodoItem {
     public TodoItem() {
         name = "";
         dueDate = null;
+        location = null;
     }
 
     public TodoItem(String name, Date dueDate) {

@@ -2,6 +2,7 @@ package com.jeremybost.doallthethings;
 
 import com.jeremybost.doallthethings.models.TodoItem;
 
+import java.io.FileOutputStream;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -31,5 +32,9 @@ public class TodoItemRepository {
 
     public void addItem(TodoItem item) {
         items.add(item);
+    }
+
+    public void save() {
+        //FileOutputStream fileOut getC
     }
 }
