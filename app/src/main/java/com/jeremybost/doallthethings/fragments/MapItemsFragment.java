@@ -128,4 +128,4 @@ public class MapItemsFragment extends Fragment implements OnMapReadyCallback {
         mMap.animateCamera(CameraUpdateFactory.zoomTo(7.0f));
     }
 }
-}
+

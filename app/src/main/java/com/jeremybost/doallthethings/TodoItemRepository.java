@@ -35,7 +35,8 @@ public class TodoItemRepository {
     private TodoItemRepository() {
         loadFromFile();
 
-        if(!items.isEmpty()) return;
+        //if(!items.isEmpty()) return;
+        items.clear();
         for(int i = 0; i < 15; i++) {
             Location loc = new Location("");
             Random r = new Random();
@@ -43,10 +44,11 @@ public class TodoItemRepository {
             double lon = 0-(79 + (79 - 81) * r.nextDouble());
             loc.setLatitude(lat);
             loc.setLongitude(lon);
-            items.add(new TodoItem("Test name", new Date(), loc));
+            items.add(new TodoItem("Test name with location", new Date(), loc));
         }
         for(int i = 0; i < 10; i++)
             items.add(new TodoItem("Test name", new Date()));
+
         saveToFile();
     }
 
