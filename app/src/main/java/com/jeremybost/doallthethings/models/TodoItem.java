@@ -1,5 +1,7 @@
 package com.jeremybost.doallthethings.models;
 
+import android.location.Location;
+
 import java.util.Date;
 
 /**
@@ -9,6 +11,7 @@ import java.util.Date;
 public class TodoItem {
     private String name;
     private Date dueDate;
+    private Location location;
 
     public TodoItem() {
         name = "";
@@ -16,8 +19,13 @@ public class TodoItem {
     }
 
     public TodoItem(String name, Date dueDate) {
+        this(name, dueDate, null);
+    }
+
+    public TodoItem(String name, Date dueDate, Location location) {
         this.name = name;
         this.dueDate = dueDate;
+        this.location = location;
     }
 
     public String getName() { return name; }
@@ -25,6 +33,9 @@ public class TodoItem {
 
     public Date getDueDate() { return dueDate; }
     public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
+
+    public Location getLocation() { return location; }
+    public void setLocation(Location location) { this.location = location; }
 
 
     public String toString() {
