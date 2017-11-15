@@ -8,7 +8,17 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.jeremybost.doallthethings.R;
+import com.jeremybost.doallthethings.TodoItemRepository;
+import com.jeremybost.doallthethings.models.TodoItem;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,9 +28,10 @@ import com.jeremybost.doallthethings.R;
  * Use the {@link MapItemsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class MapItemsFragment extends Fragment {
+public class MapItemsFragment extends Fragment implements OnMapReadyCallback {
 
     private OnFragmentInteractionListener mListener;
+    private GoogleMap mMap;
 
     public MapItemsFragment() {
         // Required empty public constructor
@@ -51,7 +62,13 @@ public class MapItemsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_map_items, container, false);
+        View v = inflater.inflate(R.layout.fragment_map_items, container, false);
+
+        SupportMapFragment mapFragment = (SupportMapFragment) getChildFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -91,5 +108,19 @@ public class MapItemsFragment extends Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onMapReady(GoogleMap googleMap) {
+        mMap = googleMap;
+
+        List<TodoItem> items = TodoItemRepository.getInstance().getItems();
+
+        for(int i = 0; i<items.size(); i++) {
+            // Add a marker for each task and move the camera
+            //LatLng pos = new LatLng(lat, lon);
+            //mMap.addMarker(new MarkerOptions().position(pos).title("Marker at match"));
+            //mMap.moveCamera(CameraUpdateFactory.newLatLng(pos));
+        }
     }
 }
