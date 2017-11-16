@@ -146,7 +146,7 @@ public class MapItemsFragment extends Fragment implements OnMapAndViewReadyListe
                     mMap.moveCamera(CameraUpdateFactory.newLatLng(lastPos));
                     mMap.animateCamera(CameraUpdateFactory.zoomTo(8.0f));
                 }
-            }, 100);
+            }, 400);
         }
 
 

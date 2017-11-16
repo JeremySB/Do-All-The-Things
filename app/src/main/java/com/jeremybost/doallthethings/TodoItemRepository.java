@@ -37,8 +37,8 @@ public class TodoItemRepository {
     private TodoItemRepository() {
         loadFromFile();
 
-        //if(!items.isEmpty()) return;
-        items.clear();
+        if(!items.isEmpty()) return;
+
         for(int i = 0; i < 10; i++) {
             Random r = new Random();
             double lat = 40 + (43 - 40) * r.nextDouble();
