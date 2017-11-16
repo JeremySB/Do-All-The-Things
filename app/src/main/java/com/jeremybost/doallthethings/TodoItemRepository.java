@@ -32,21 +32,20 @@ public class TodoItemRepository {
         return ourInstance;
     }
 
+    private OnChangeListener listener;
+
     private TodoItemRepository() {
         loadFromFile();
 
         //if(!items.isEmpty()) return;
         items.clear();
-        for(int i = 0; i < 15; i++) {
-            Location loc = new Location("");
+        for(int i = 0; i < 10; i++) {
             Random r = new Random();
             double lat = 40 + (43 - 40) * r.nextDouble();
             double lon = 0-(79 + (79 - 81) * r.nextDouble());
-            loc.setLatitude(lat);
-            loc.setLongitude(lon);
-            items.add(new TodoItem("Test name with location", new Date(), loc));
+            items.add(new TodoItem("Test name with location", new Date(), lat, lon));
         }
-        for(int i = 0; i < 10; i++)
+        for(int i = 0; i < 5; i++)
             items.add(new TodoItem("Test name", new Date()));
 
         saveToFile();
@@ -59,6 +58,7 @@ public class TodoItemRepository {
     public void addItem(TodoItem item) {
         items.add(item);
         saveToFile();
+        if(listener != null) listener.OnTodoItemsChanged();
     }
 
     public void saveToFile() {
@@ -114,5 +114,13 @@ public class TodoItemRepository {
                 // ehh
             }
         }
+    }
+
+    public void setOnChangeListener(OnChangeListener listener) {
+        this.listener = listener;
+    }
+
+    public interface OnChangeListener {
+        void OnTodoItemsChanged();
     }
 }

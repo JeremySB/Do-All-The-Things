@@ -12,23 +12,24 @@ import java.util.Date;
 public class TodoItem implements Serializable {
     private String name;
     private Date dueDate;
-    private Location location;
+    private Double latitude, longitude;
+    private boolean hasLocation = false;
 
     public TodoItem() {
         name = "";
         dueDate = null;
-        location = null;
     }
 
     public TodoItem(String name, Date dueDate) {
-        this(name, dueDate, null);
+        this(name, dueDate, null, null);
     }
 
-    public TodoItem(String name, Date dueDate, Location location) {
+    public TodoItem(String name, Date dueDate, Double latitude, Double longitude) {
         this.name = name;
         this.dueDate = dueDate;
-        this.location = location;
+        setLocation(latitude, longitude);
     }
+
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -36,9 +37,19 @@ public class TodoItem implements Serializable {
     public Date getDueDate() { return dueDate; }
     public void setDueDate(Date dueDate) { this.dueDate = dueDate; }
 
-    public Location getLocation() { return location; }
-    public void setLocation(Location location) { this.location = location; }
+    public double getLatitude() { return latitude; }
+    public double getLongitude() { return longitude; }
+    public void setLocation(Double latitude, Double longitude) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        if(latitude != null && longitude != null) {
+            hasLocation = true;
+        } else {
+            hasLocation = false;
+        }
+    }
 
+    public boolean hasLocation() { return hasLocation; }
 
     public String toString() {
         return name + ", " + dueDate.toString();

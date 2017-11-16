@@ -23,10 +23,12 @@ import com.jeremybost.doallthethings.models.TodoItem;
  * Activities containing this fragment MUST implement the {@link OnListFragmentInteractionListener}
  * interface.
  */
-public class TodoListFragment extends Fragment {
+public class TodoListFragment extends Fragment implements
+        TodoItemRepository.OnChangeListener {
 
     private OnListFragmentInteractionListener mListener;
     private FloatingActionButton fab;
+    private RecyclerView recyclerView;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -57,7 +59,7 @@ public class TodoListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_todo_list, container, false);
 
-        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        recyclerView = (RecyclerView) view.findViewById(R.id.list);
         Context context = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
         //recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
@@ -70,6 +72,8 @@ public class TodoListFragment extends Fragment {
                 addItem();
             }
         });
+
+        TodoItemRepository.getInstance().setOnChangeListener(this);
 
         return view;
     }
@@ -90,6 +94,11 @@ public class TodoListFragment extends Fragment {
     public void onDetach() {
         super.onDetach();
         mListener = null;
+    }
+
+    @Override
+    public void OnTodoItemsChanged() {
+        recyclerView.setAdapter(new TodoItemRecyclerViewAdapter(TodoItemRepository.getInstance().getItems(), mListener));
     }
 
     /**
