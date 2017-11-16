@@ -1,7 +1,9 @@
 package com.jeremybost.doallthethings.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jeremybost.doallthethings.CreateTodoItemActivity;
 import com.jeremybost.doallthethings.R;
 import com.jeremybost.doallthethings.TodoItemRecyclerViewAdapter;
 import com.jeremybost.doallthethings.TodoItemRepository;
@@ -23,6 +26,7 @@ import com.jeremybost.doallthethings.models.TodoItem;
 public class TodoListFragment extends Fragment {
 
     private OnListFragmentInteractionListener mListener;
+    private FloatingActionButton fab;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -53,14 +57,20 @@ public class TodoListFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_todo_list, container, false);
 
-        // Set the adapter
-        if (view instanceof RecyclerView) {
-            Context context = view.getContext();
-            RecyclerView recyclerView = (RecyclerView) view;
-            recyclerView.setLayoutManager(new LinearLayoutManager(context));
-            //recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
-            recyclerView.setAdapter(new TodoItemRecyclerViewAdapter(TodoItemRepository.getInstance().getItems(), mListener));
-        }
+        RecyclerView recyclerView = (RecyclerView) view.findViewById(R.id.list);
+        Context context = view.getContext();
+        recyclerView.setLayoutManager(new LinearLayoutManager(context));
+        //recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
+        recyclerView.setAdapter(new TodoItemRecyclerViewAdapter(TodoItemRepository.getInstance().getItems(), mListener));
+
+        fab = (FloatingActionButton)view.findViewById(R.id.todoFAB);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                addItem();
+            }
+        });
+
         return view;
     }
 
@@ -94,5 +104,9 @@ public class TodoListFragment extends Fragment {
      */
     public interface OnListFragmentInteractionListener {
         void onListFragmentInteraction(TodoItem item);
+    }
+
+    private void addItem() {
+        startActivity(new Intent(getActivity(), CreateTodoItemActivity.class));
     }
 }
