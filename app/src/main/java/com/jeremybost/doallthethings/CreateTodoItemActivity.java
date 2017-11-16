@@ -4,6 +4,8 @@ import android.Manifest;
 import android.app.Activity;
 import android.content.pm.PackageManager;
 import android.location.Location;
+import android.support.annotation.NonNull;
+import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,6 +15,7 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 
+import com.google.android.gms.tasks.OnFailureListener;
 import com.jeremybost.doallthethings.models.TodoItem;
 
 import java.util.Calendar;
@@ -75,6 +78,11 @@ public class CreateTodoItemActivity extends AppCompatActivity {
                 @Override
                 public void onSuccess(Location location) {
                     lastLocation = location;
+                }
+            }).addOnFailureListener(this, new OnFailureListener() {
+                @Override
+                public void onFailure(@NonNull Exception e) {
+                    System.out.println(e.getMessage());
                 }
             });
         }
