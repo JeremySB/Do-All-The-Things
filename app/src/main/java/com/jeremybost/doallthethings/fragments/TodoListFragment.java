@@ -7,6 +7,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -65,7 +66,7 @@ public class TodoListFragment extends Fragment implements
         //recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
         recyclerView.setAdapter(new TodoItemRecyclerViewAdapter(TodoItemRepository.getInstance().getItems(), mListener));
 
-        fab = (FloatingActionButton)view.findViewById(R.id.todoFAB);
+        fab = view.findViewById(R.id.todoFAB);
         fab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -74,6 +75,22 @@ public class TodoListFragment extends Fragment implements
         });
 
         TodoItemRepository.getInstance().setOnChangeListener(this);
+
+        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback
+                (0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+            @Override
+            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                return false;
+            }
+
+            @Override
+            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+
+            }
+        };
+
+        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+        itemTouchHelper.attachToRecyclerView(recyclerView);
 
         return view;
     }
@@ -100,6 +117,8 @@ public class TodoListFragment extends Fragment implements
     public void OnTodoItemsChanged() {
         recyclerView.setAdapter(new TodoItemRecyclerViewAdapter(TodoItemRepository.getInstance().getItems(), mListener));
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
