@@ -61,7 +61,7 @@ public class TodoItemRepository {
         if(item == null) return;
 
         items.add(item);
-        item.setNotificationCode(notificationCodeCounter++);
+        item.setNotificationCode(++notificationCodeCounter);
 
         if(!sortAndSave) return;
 
@@ -69,20 +69,22 @@ public class TodoItemRepository {
 
         saveToFile();
         if(listener != null) listener.OnTodoItemsChanged();
+
+        generateNotifications();
     }
 
-    public boolean removeItem(TodoItem item) {
-        for (int i = 0; i < items.size(); i++) {
-            if(items.get(i).equals(item)) {
-                items.remove(i);
-                saveToFile();
-                if(listener != null) listener.OnTodoItemsChanged();
-                return true;
-            }
-        }
-
-        return false;
-    }
+//    public boolean removeItem(TodoItem item) {
+//        for (int i = 0; i < items.size(); i++) {
+//            if(items.get(i).equals(item)) {
+//                items.remove(i);
+//                saveToFile();
+//                if(listener != null) listener.OnTodoItemsChanged();
+//                return true;
+//            }
+//        }
+//
+//        return false;
+//    }
 
     public void saveToFile() {
         new SaveAsyncTask().executeOnExecutor(AsyncTask.SERIAL_EXECUTOR, items);
@@ -98,6 +100,10 @@ public class TodoItemRepository {
 
     public interface OnChangeListener {
         void OnTodoItemsChanged();
+    }
+
+    public void generateNotifications() {
+        new NotificationScheduler().scheduleNotifications(items);
     }
 
     private class SaveAsyncTask extends AsyncTask<List<TodoItem>, Void, Void> {
@@ -184,6 +190,7 @@ public class TodoItemRepository {
             items.sort(Comparator.comparing(TodoItem::getDueDate));
 
             notificationCodeCounter = items.stream().mapToInt(TodoItem::getNotificationCode).max().orElse(0);
+            generateNotifications();
 
             if(listener != null) listener.OnTodoItemsChanged();
         }

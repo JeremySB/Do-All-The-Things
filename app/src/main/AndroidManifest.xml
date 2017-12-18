@@ -40,6 +40,8 @@
 
             android:theme="@style/AppTheme.NoActionBar"
             android:label="New Todo Item"/>
+
+        <receiver android:name=".NotificationPublisher" />
     </application>
 
 </manifest>

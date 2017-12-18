@@ -2,6 +2,8 @@ package com.jeremybost.doallthethings.models;
 
 import android.location.Location;
 
+import com.jeremybost.doallthethings.TodoItemRepository;
+
 import java.io.Serializable;
 import java.util.Date;
 
@@ -15,7 +17,7 @@ public class TodoItem implements Serializable {
     private Double latitude, longitude;
     private boolean hasLocation = false;
     private boolean completed = false;
-
+    private boolean notified = false;
 
 
     private int notificationCode;
@@ -39,6 +41,11 @@ public class TodoItem implements Serializable {
         this.reminder = reminder;
     }
 
+    public boolean shouldNotify() {
+        boolean result = !notified && !completed && dueDate.getTime() > System.currentTimeMillis();
+        notified = true;
+        return result;
+    }
 
     public String getName() { return name; }
     public void setName(String name) { this.name = name; }
@@ -63,6 +70,7 @@ public class TodoItem implements Serializable {
     }
     public void setCompleted(boolean completed) {
         this.completed = completed;
+        TodoItemRepository.getInstance().generateNotifications();
     }
 
     public int getReminder() {
