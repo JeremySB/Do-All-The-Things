@@ -10,6 +10,10 @@ import android.support.annotation.NonNull;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
@@ -23,13 +27,11 @@ import com.jeremybost.doallthethings.models.TodoItem;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Locale;
 
 import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnSuccessListener;
 
 public class CreateTodoItemActivity extends AppCompatActivity {
-    Button addItemBtn;
     private EditText itemName;
     private Calendar myCalendar;
     private DatePickerDialog.OnDateSetListener dateListener;
@@ -43,9 +45,14 @@ public class CreateTodoItemActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_todo_item);
 
-        addItemBtn = findViewById(R.id.addItemBtn);
+        Toolbar toolbar = findViewById(R.id.createToolbar);
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+
+
         itemName = findViewById(R.id.itemName);
-        dueDateBtn = findViewById(R.id.DueDateBtn);
+        dueDateBtn = findViewById(R.id.dueDateBtn);
         dueTimeBtn = findViewById(R.id.dueTimeBtn);
 
         itemName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
@@ -59,60 +66,41 @@ public class CreateTodoItemActivity extends AppCompatActivity {
 
         myCalendar = Calendar.getInstance();
 
+        dueDateBtn.setText(SimpleDateFormat.getDateInstance().format(myCalendar.getTime()));
+        dueTimeBtn.setText(SimpleDateFormat.getTimeInstance().format(myCalendar.getTime()));
+
         dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int monthOfYear,
                                   int dayOfMonth) {
-                // TODO Auto-generated method stub
                 myCalendar.set(Calendar.YEAR, year);
                 myCalendar.set(Calendar.MONTH, monthOfYear);
                 myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
 
-                dueTimeBtn.setText(myCalendar.getTime().toString());
+                dueDateBtn.setText(SimpleDateFormat.getDateInstance().format(myCalendar.getTime()));
             }
         };
+
         timeListener = new TimePickerDialog.OnTimeSetListener() {
             @Override
             public void onTimeSet(TimePicker timePicker, int i, int i1) {
                 myCalendar.set(Calendar.HOUR_OF_DAY, i);
                 myCalendar.set(Calendar.MINUTE, i1);
+
+                dueTimeBtn.setText(SimpleDateFormat.getTimeInstance().format(myCalendar.getTime()));
             }
         };
 
 
-        dueDateBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                // TODO Auto-generated method stub
-                new DatePickerDialog(CreateTodoItemActivity.this, dateListener, myCalendar
-                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
-                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
-            }
+        dueDateBtn.setOnClickListener(v -> {
+            new DatePickerDialog(this, dateListener, myCalendar
+                    .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                    myCalendar.get(Calendar.DAY_OF_MONTH)).show();
         });
 
-        dueTimeBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                new TimePickerDialog(CreateTodoItemActivity.this, timeListener,
-                        myCalendar.get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE),
-                        false).show();
-            }
-        });
-
-        addItemBtn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                TodoItem item = new TodoItem();
-                item.setName(itemName.getText().toString());
-                item.setDueDate(myCalendar.getTime());
-                if(lastLocation != null)
-                    item.setLocation(lastLocation.getLatitude(), lastLocation.getLongitude());
-
-                TodoItemRepository.getInstance().addItem(item);
-
-                finish();
-            }
-        });
+        dueTimeBtn.setOnClickListener(view -> new TimePickerDialog(this, timeListener,
+                myCalendar.get(Calendar.HOUR_OF_DAY), myCalendar.get(Calendar.MINUTE),
+                false).show());
 
         // get last location from Google Play API
 
@@ -132,6 +120,31 @@ public class CreateTodoItemActivity extends AppCompatActivity {
                 }
             });
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inf = getMenuInflater();
+        inf.inflate(R.menu.create_menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem menuItem) {
+        if(menuItem.getItemId() == R.id.action_add) {
+            TodoItem item = new TodoItem();
+            item.setName(itemName.getText().toString());
+            item.setDueDate(myCalendar.getTime());
+            if(lastLocation != null)
+                item.setLocation(lastLocation.getLatitude(), lastLocation.getLongitude());
+
+            TodoItemRepository.getInstance().addItem(item);
+
+            finish();
+
+            return true;
+        }
+        return super.onOptionsItemSelected(menuItem);
     }
 
     public void hideKeyboard(View view) {

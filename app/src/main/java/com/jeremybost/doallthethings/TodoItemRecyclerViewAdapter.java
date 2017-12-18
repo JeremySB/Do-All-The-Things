@@ -15,7 +15,6 @@ import java.util.List;
 /**
  * {@link RecyclerView.Adapter} that can display a {@link com.jeremybost.doallthethings.models.TodoItem} and makes a call to the
  * specified {@link OnListFragmentInteractionListener}.
- * TODO: Replace the implementation with code for your data type.
  */
 public class TodoItemRecyclerViewAdapter extends RecyclerView.Adapter<TodoItemRecyclerViewAdapter.ViewHolder> {
 
@@ -56,6 +55,14 @@ public class TodoItemRecyclerViewAdapter extends RecyclerView.Adapter<TodoItemRe
     @Override
     public int getItemCount() {
         return mValues.size();
+    }
+
+    public TodoItem getItemAt(int position) {
+        try {
+            return mValues.get(position);
+        } catch (Exception e) {
+            return null;
+        }
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {

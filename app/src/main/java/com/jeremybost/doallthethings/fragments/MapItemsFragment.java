@@ -8,11 +8,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
-import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
@@ -127,7 +125,7 @@ public class MapItemsFragment extends Fragment implements OnMapAndViewReadyListe
     }
 
     private void addPins() {
-        List<TodoItem> items = TodoItemRepository.getInstance().getItems();
+        List<TodoItem> items = TodoItemRepository.getInstance().getActiveItems();
 
         for(int i = 0; i<items.size(); i++) {
             // Add a marker for each task and move the camera

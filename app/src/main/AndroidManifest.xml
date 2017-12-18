@@ -37,7 +37,9 @@
 
         <activity android:name=".CreateTodoItemActivity"
             android:parentActivityName=".MainActivity"
-            android:label="Create New Todo Item"/>
+
+            android:theme="@style/AppTheme.NoActionBar"
+            android:label="New Todo Item"/>
     </application>
 
 </manifest>

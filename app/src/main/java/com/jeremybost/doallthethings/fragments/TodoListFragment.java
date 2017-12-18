@@ -2,8 +2,11 @@ package com.jeremybost.doallthethings.fragments;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.support.design.widget.CoordinatorLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -18,6 +21,9 @@ import com.jeremybost.doallthethings.TodoItemRecyclerViewAdapter;
 import com.jeremybost.doallthethings.TodoItemRepository;
 import com.jeremybost.doallthethings.models.TodoItem;
 
+import java.util.Comparator;
+import java.util.List;
+
 /**
  * A fragment representing a list of Items.
  * <p/>
@@ -30,6 +36,8 @@ public class TodoListFragment extends Fragment implements
     private OnListFragmentInteractionListener mListener;
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
+    private TodoItemRecyclerViewAdapter adapter;
+    private CoordinatorLayout coordinatorLayout;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -63,16 +71,15 @@ public class TodoListFragment extends Fragment implements
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
         Context context = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        //recyclerView.setLayoutManager(new GridLayoutManager(context, 2));
-        recyclerView.setAdapter(new TodoItemRecyclerViewAdapter(TodoItemRepository.getInstance().getItems(), mListener));
+        List<TodoItem> items = TodoItemRepository.getInstance().getActiveItems();
+        items.sort(Comparator.comparing(TodoItem::getDueDate));
+        adapter = new TodoItemRecyclerViewAdapter(items, mListener);
+        recyclerView.setAdapter(adapter);
 
         fab = view.findViewById(R.id.todoFAB);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                addItem();
-            }
-        });
+        fab.setOnClickListener(v -> addItem());
+
+        coordinatorLayout = view.findViewById(R.id.todoListContainer);
 
         TodoItemRepository.getInstance().setOnChangeListener(this);
 
@@ -85,7 +92,19 @@ public class TodoListFragment extends Fragment implements
 
             @Override
             public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                final TodoItem item = adapter.getItemAt(viewHolder.getAdapterPosition());
+                // showing snack bar with Undo option
+                Snackbar snackbar = Snackbar
+                        .make(coordinatorLayout, "Item Completed!", Snackbar.LENGTH_LONG);
+                snackbar.setAction("UNDO", view1 -> {
+                    // undo is selected, restore the deleted item
+                    TodoItemRepository.getInstance().addItem(item);
+                });
 
+                snackbar.setActionTextColor(Color.RED);
+                snackbar.show();
+
+                TodoItemRepository.getInstance().removeItem(item);
             }
         };
 
@@ -115,7 +134,8 @@ public class TodoListFragment extends Fragment implements
 
     @Override
     public void OnTodoItemsChanged() {
-        recyclerView.setAdapter(new TodoItemRecyclerViewAdapter(TodoItemRepository.getInstance().getItems(), mListener));
+        adapter = new TodoItemRecyclerViewAdapter(TodoItemRepository.getInstance().getActiveItems(), mListener);
+        recyclerView.setAdapter(adapter);
     }
 
 

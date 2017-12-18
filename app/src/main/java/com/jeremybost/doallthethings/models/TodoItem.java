@@ -14,6 +14,7 @@ public class TodoItem implements Serializable {
     private Date dueDate;
     private Double latitude, longitude;
     private boolean hasLocation = false;
+    private boolean completed = false;
 
     public TodoItem() {
         name = "";
@@ -49,6 +50,13 @@ public class TodoItem implements Serializable {
         }
     }
 
+    public boolean getCompleted() {
+        return completed;
+    }
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
+
     public boolean hasLocation() { return hasLocation; }
 
     public String toString() {
@@ -60,6 +68,15 @@ public class TodoItem implements Serializable {
             return false;
         }
         if(!dueDate.equals(other.getDueDate())) {
+            return false;
+        }
+        if(!(completed == other.getCompleted())) {
+            return false;
+        }
+        if(hasLocation && !latitude.equals(other.getLatitude())) {
+            return false;
+        }
+        if(hasLocation && !longitude.equals(other.getLongitude())) {
             return false;
         }
 
