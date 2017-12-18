@@ -21,6 +21,7 @@ import com.jeremybost.doallthethings.TodoItemRecyclerViewAdapter;
 import com.jeremybost.doallthethings.TodoItemRepository;
 import com.jeremybost.doallthethings.models.TodoItem;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
@@ -37,7 +38,11 @@ public class TodoListFragment extends Fragment implements
     private FloatingActionButton fab;
     private RecyclerView recyclerView;
     private TodoItemRecyclerViewAdapter adapter;
+    private final List<TodoItem> items = new ArrayList<>();
     private CoordinatorLayout coordinatorLayout;
+
+    private boolean completedMode = false;
+    private static final String COMPLETED_MODE_ARG = "completed-mode-arg";
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
@@ -46,9 +51,10 @@ public class TodoListFragment extends Fragment implements
     public TodoListFragment() {
     }
 
-    public static TodoListFragment newInstance() {
+    public static TodoListFragment newInstance(boolean completedMode) {
         TodoListFragment fragment = new TodoListFragment();
         Bundle args = new Bundle();
+        args.putBoolean(COMPLETED_MODE_ARG, completedMode);
 
         fragment.setArguments(args);
         return fragment;
@@ -59,7 +65,7 @@ public class TodoListFragment extends Fragment implements
         super.onCreate(savedInstanceState);
 
         if (getArguments() != null) {
-            //mColumnCount = getArguments().getInt(ARG_COLUMN_COUNT);
+            completedMode = getArguments().getBoolean(COMPLETED_MODE_ARG, false);
         }
     }
 
@@ -71,8 +77,7 @@ public class TodoListFragment extends Fragment implements
         recyclerView = (RecyclerView) view.findViewById(R.id.list);
         Context context = view.getContext();
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
-        List<TodoItem> items = TodoItemRepository.getInstance().getActiveItems();
-        items.sort(Comparator.comparing(TodoItem::getDueDate));
+        refreshItems();
         adapter = new TodoItemRecyclerViewAdapter(items, mListener);
         recyclerView.setAdapter(adapter);
 
@@ -81,35 +86,44 @@ public class TodoListFragment extends Fragment implements
 
         coordinatorLayout = view.findViewById(R.id.todoListContainer);
 
-        TodoItemRepository.getInstance().setOnChangeListener(this);
+        if(!completedMode) {
 
-        ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback
-                (0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
-            @Override
-            public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
-                return false;
-            }
+            TodoItemRepository.getInstance().setOnChangeListener(this);
 
-            @Override
-            public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
-                final TodoItem item = adapter.getItemAt(viewHolder.getAdapterPosition());
-                // showing snack bar with Undo option
-                Snackbar snackbar = Snackbar
-                        .make(coordinatorLayout, "Item Completed!", Snackbar.LENGTH_LONG);
-                snackbar.setAction("UNDO", view1 -> {
-                    // undo is selected, restore the deleted item
-                    TodoItemRepository.getInstance().addItem(item);
-                });
+            ItemTouchHelper.SimpleCallback simpleItemTouchCallback = new ItemTouchHelper.SimpleCallback
+                    (0, ItemTouchHelper.LEFT | ItemTouchHelper.RIGHT) {
+                @Override
+                public boolean onMove(RecyclerView recyclerView, RecyclerView.ViewHolder viewHolder, RecyclerView.ViewHolder target) {
+                    return false;
+                }
 
-                snackbar.setActionTextColor(Color.RED);
-                snackbar.show();
+                @Override
+                public void onSwiped(RecyclerView.ViewHolder viewHolder, int direction) {
+                    final int position = viewHolder.getAdapterPosition();
+                    final TodoItem item = adapter.getItemAt(position);
+                    // showing snack bar with Undo option
+                    Snackbar snackbar = Snackbar
+                            .make(coordinatorLayout, "Item Completed!", Snackbar.LENGTH_LONG);
+                    snackbar.setAction("UNDO", view1 -> {
+                        // undo is selected, restore the deleted item
+                        item.setCompleted(false);
+                        items.add(position, item);
+                        adapter.notifyItemInserted(position);
+                    });
 
-                TodoItemRepository.getInstance().removeItem(item);
-            }
-        };
+                    snackbar.setActionTextColor(Color.RED);
+                    snackbar.show();
 
-        ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
-        itemTouchHelper.attachToRecyclerView(recyclerView);
+                    item.setCompleted(true);
+                    adapter.notifyItemRemoved(viewHolder.getAdapterPosition());
+                    items.remove(position);
+                }
+            };
+
+            ItemTouchHelper itemTouchHelper = new ItemTouchHelper(simpleItemTouchCallback);
+            itemTouchHelper.attachToRecyclerView(recyclerView);
+
+        }
 
         return view;
     }
@@ -134,11 +148,14 @@ public class TodoListFragment extends Fragment implements
 
     @Override
     public void OnTodoItemsChanged() {
-        adapter = new TodoItemRecyclerViewAdapter(TodoItemRepository.getInstance().getActiveItems(), mListener);
-        recyclerView.setAdapter(adapter);
+        refreshItems();
+        adapter.notifyDataSetChanged();
     }
 
-
+    private void refreshItems() {
+        items.clear();
+        items.addAll(TodoItemRepository.getInstance().getItems(completedMode));
+    }
 
     /**
      * This interface must be implemented by activities that contain this

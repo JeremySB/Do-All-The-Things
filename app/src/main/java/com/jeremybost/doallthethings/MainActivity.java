@@ -70,15 +70,15 @@ public class MainActivity extends AppCompatActivity implements
         switch (itemId) {
             case R.id.navigation_todo:
                 validSwitch = true;
-                frag = TodoListFragment.newInstance();
+                frag = TodoListFragment.newInstance(false);
                 break;
             case R.id.navigation_map:
                 validSwitch = true;
                 frag = MapItemsFragment.newInstance();
                 break;
-            case R.id.navigation_settings:
+            case R.id.navigation_completed:
                 validSwitch = true;
-                frag = SettingsFragment.newInstance();
+                frag = TodoListFragment.newInstance(true);
                 break;
         }
         if(frag != null) {

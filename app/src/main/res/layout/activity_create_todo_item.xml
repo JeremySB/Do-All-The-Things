@@ -62,5 +62,22 @@
         app:layout_constraintStart_toEndOf="@+id/dueDateBtn"
         app:layout_constraintTop_toTopOf="@+id/dueDateBtn" />
 
+    <EditText
+        android:id="@+id/reminderMinutes"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:digits="0123456789."
+        android:ems="10"
+        android:hint="@string/reminder_hint"
+        android:inputType="number"
+        android:selectAllOnFocus="true"
+        android:singleLine="true"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/dueDateBtn" />
+
 
 </android.support.constraint.ConstraintLayout>

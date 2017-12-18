@@ -16,19 +16,27 @@ public class TodoItem implements Serializable {
     private boolean hasLocation = false;
     private boolean completed = false;
 
+
+
+    private int notificationCode;
+
+
+    private int reminder = 60;
+
     public TodoItem() {
         name = "";
         dueDate = null;
     }
 
     public TodoItem(String name, Date dueDate) {
-        this(name, dueDate, null, null);
+        this(name, dueDate, null, null, 60);
     }
 
-    public TodoItem(String name, Date dueDate, Double latitude, Double longitude) {
+    public TodoItem(String name, Date dueDate, Double latitude, Double longitude, int reminder) {
         this.name = name;
         this.dueDate = dueDate;
         setLocation(latitude, longitude);
+        this.reminder = reminder;
     }
 
 
@@ -55,6 +63,20 @@ public class TodoItem implements Serializable {
     }
     public void setCompleted(boolean completed) {
         this.completed = completed;
+    }
+
+    public int getReminder() {
+        return reminder;
+    }
+    public void setReminder(int reminder) {
+        this.reminder = reminder;
+    }
+
+    public int getNotificationCode() {
+        return notificationCode;
+    }
+    public void setNotificationCode(int notificationCode) {
+        this.notificationCode = notificationCode;
     }
 
     public boolean hasLocation() { return hasLocation; }

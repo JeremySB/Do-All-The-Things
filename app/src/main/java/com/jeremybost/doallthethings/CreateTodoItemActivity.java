@@ -39,6 +39,7 @@ public class CreateTodoItemActivity extends AppCompatActivity {
     private Location lastLocation;
     TextView dueDateBtn;
     TextView dueTimeBtn;
+    private EditText reminder;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +55,7 @@ public class CreateTodoItemActivity extends AppCompatActivity {
         itemName = findViewById(R.id.itemName);
         dueDateBtn = findViewById(R.id.dueDateBtn);
         dueTimeBtn = findViewById(R.id.dueTimeBtn);
+        reminder = findViewById(R.id.reminderMinutes);
 
         itemName.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
@@ -137,6 +139,9 @@ public class CreateTodoItemActivity extends AppCompatActivity {
             item.setDueDate(myCalendar.getTime());
             if(lastLocation != null)
                 item.setLocation(lastLocation.getLatitude(), lastLocation.getLongitude());
+
+            if(!reminder.getText().toString().equals(""))
+                item.setReminder(Integer.parseInt(reminder.getText().toString()));
 
             TodoItemRepository.getInstance().addItem(item);
 

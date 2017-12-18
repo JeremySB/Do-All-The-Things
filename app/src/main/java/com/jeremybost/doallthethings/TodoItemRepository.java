@@ -27,6 +27,8 @@ import java.util.stream.Collectors;
 public class TodoItemRepository {
     private List<TodoItem> items;
 
+    private int notificationCodeCounter = 0;
+
     private static final TodoItemRepository ourInstance = new TodoItemRepository();
 
     private static final String FILE_NAME = "todo-items";
@@ -43,14 +45,26 @@ public class TodoItemRepository {
         loadFromFile();
     }
 
-    public List<TodoItem> getActiveItems() {
-        return items.stream().filter(todoItem -> !todoItem.getCompleted()).collect(Collectors.toList());
+    public List<TodoItem> getItems() {
+        return getItems(false);
+    }
+
+    public List<TodoItem> getItems(boolean completedItems) {
+        return items.stream().filter(todoItem -> todoItem.getCompleted() == completedItems).collect(Collectors.toList());
     }
 
     public void addItem(TodoItem item) {
+        addItem(item, true);
+    }
+
+    public void addItem(TodoItem item, boolean sortAndSave) {
         if(item == null) return;
 
         items.add(item);
+        item.setNotificationCode(notificationCodeCounter++);
+
+        if(!sortAndSave) return;
+
         items.sort(Comparator.comparing(TodoItem::getDueDate));
 
         saveToFile();
@@ -163,9 +177,13 @@ public class TodoItemRepository {
                     Random r = new Random();
                     double lat = 40 + (43 - 40) * r.nextDouble();
                     double lon = 0 - (79 + (79 - 81) * r.nextDouble());
-                    items.add(new TodoItem("Test name with location", new Date(), lat, lon));
+                    addItem(new TodoItem("Filler item " + (i+1) + " with location", new Date(), lat, lon, 60), false);
                 }
             }
+
+            items.sort(Comparator.comparing(TodoItem::getDueDate));
+
+            notificationCodeCounter = items.stream().mapToInt(TodoItem::getNotificationCode).max().orElse(0);
 
             if(listener != null) listener.OnTodoItemsChanged();
         }

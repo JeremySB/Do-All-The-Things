@@ -125,7 +125,7 @@ public class MapItemsFragment extends Fragment implements OnMapAndViewReadyListe
     }
 
     private void addPins() {
-        List<TodoItem> items = TodoItemRepository.getInstance().getActiveItems();
+        List<TodoItem> items = TodoItemRepository.getInstance().getItems();
 
         for(int i = 0; i<items.size(); i++) {
             // Add a marker for each task and move the camera
