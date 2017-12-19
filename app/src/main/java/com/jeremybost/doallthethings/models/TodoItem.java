@@ -71,6 +71,7 @@ public class TodoItem implements Serializable {
     public void setCompleted(boolean completed) {
         this.completed = completed;
         TodoItemRepository.getInstance().generateNotifications();
+        TodoItemRepository.getInstance().saveToFile();
     }
 
     public int getReminder() {
